@@ -1,0 +1,453 @@
+# valentine
+surprise 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>For Unisha ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Comic Sans MS', cursive;
+  text-align: center;
+  background: pink;
+  overflow-x: hidden;
+  color: #800000;
+}
+
+h1 {
+  margin-top: 60px;
+}
+
+button {
+  font-size: 1.1em;
+  padding: 10px 18px;
+  margin: 12px;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  background-color: #ff1493;
+  color: white;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+#message {
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
+#valentineCard {
+  position: fixed;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff1493;
+  color: white;
+  padding: 18px 28px;
+  border-radius: 20px;
+  font-size: 1.2em;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+  transition: top 1.2s ease-out;
+  z-index: 1000;
+}
+
+/* button inside card */
+#valentineCard button {
+  background-color: #ffffff;
+  color: #ff1493;
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+
+/* Ensure final content sits above card and canvas so the letter is visible */
+#final {
+  position: fixed;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1101;
+  width: 100%;
+  max-width: 720px;
+  pointer-events: auto;
+  text-align: center;
+  color: white;
+}
+
+/* image inside final */
+#final img {
+  width: 220px;
+  margin-top: 20px;
+  border-radius: 15px;
+}
+
+.love-letter {
+  margin: 20px auto;
+  max-width: 680px;
+  background: #fff0f5;
+  padding: 25px;
+  border-radius: 15px;
+  font-size: 1.1em;
+  line-height: 1.7;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  color: #800000;
+  /* fallback fonts that support Devanagari/Nepali characters */
+  font-family: 'Noto Sans Devanagari', 'Mangal', 'Devanagari', 'Segoe UI', sans-serif;
+  text-align: left;
+}
+
+/* Fullscreen overlay to show the Nepali letter across the whole screen */
+#fullscreenOverlay {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10,10,10,0.98);
+  color: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* big letter card inside fullscreen */
+.love-letter-full {
+  margin: 30px auto;
+  max-width: 1000px;
+  background: #fff0f5;
+  padding: 36px;
+  border-radius: 18px;
+  font-size: 1.7em;
+  line-height: 1.9;
+  color: #800000;
+  font-family: 'Noto Sans Devanagari', 'Mangal', 'Devanagari', 'Segoe UI', sans-serif;
+  text-align: left;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+/* close button for fullscreen */
+#closeFullBtn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 2100;
+  background: #ff1493;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+/* hearts/roses that float up */
+.heart, .rose {
+  position: absolute;
+  font-size: 24px;
+  animation: floatUp 5s linear forwards;
+  pointer-events: none;
+  z-index: 900;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-800px); opacity: 0; }
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 800;
+}
+
+/* small responsive nicety */
+@media (max-width: 480px) {
+  .love-letter { font-size: 1em; padding: 18px; }
+  .love-letter-full { font-size: 1.25em; padding: 22px; }
+  button { font-size: 1em; padding: 8px 12px; }
+  #final { top: 120px; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>💖 Unisha, Will You Be My Valentine? 💖</h1>
+
+<div id="buttons">
+  <button id="yesBtn">Yes ❤️</button>
+  <button id="noBtn">No 💔</button>
+</div>
+
+<div id="message"></div>
+
+<!-- Valentine card with an extra button that will appear when the card slides in -->
+<div id="valentineCard">
+  💌 Happy Valentine's Day Unisha 💌
+  <div style="margin-top:8px;">
+    <button id="fullBtn" style="display:none;">Show Fullscreen Letter</button>
+  </div>
+</div>
+
+<div id="final"></div>
+
+<!-- Fullscreen overlay (hidden until requested) -->
+<div id="fullscreenOverlay" aria-hidden="true">
+  <button id="closeFullBtn">Close ✕</button>
+  <div class="love-letter-full" id="fullLetterContent">
+    प्रिय Unisha ❤️ <br><br>
+    तिमी मेरो जीवनको सबैभन्दा सुन्दर उपहार हौ।  
+    तिम्रो मुस्कानले मेरो हरेक दिन उज्यालो बनाउँछ।  
+    म सधैं तिम्रो साथमा रहन चाहन्छु,  
+    सुख-दुःख हरेक क्षणमा।  
+    तिमी बिना मेरो संसार अधुरो छ।  
+    म तिमीलाई धेरै माया गर्छु। ❤️ <br><br>
+    सधैं तिम्रो, <br>
+    Vivek 💖
+  </div>
+</div>
+
+<!-- Preload + playsinline to help browsers allow playback when started from a user gesture -->
+<audio id="bgMusic" preload="auto" playsinline src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b1b1a2f3.mp3?filename=romantic-background-11272.mp3"></audio>
+<audio id="happyMusic" preload="auto" playsinline src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6e8b65c70c.mp3?filename=happy-ukulele-11061.mp3"></audio>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+/* State */
+let noClicks = 0;
+let musicStarted = false;
+let yesClicked = false;
+
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const message = document.getElementById("message");
+const valentineCard = document.getElementById("valentineCard");
+const final = document.getElementById("final");
+const fullBtn = document.getElementById("fullBtn");
+
+const fullscreenOverlay = document.getElementById("fullscreenOverlay");
+const closeFullBtn = document.getElementById("closeFullBtn");
+const fullLetterContent = document.getElementById("fullLetterContent");
+
+const bgMusic = document.getElementById("bgMusic");
+const happyMusic = document.getElementById("happyMusic");
+
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+/* Ensure first user click unlocks bgMusic attempt */
+document.addEventListener("click", function startBgOnFirstGesture() {
+  if (!musicStarted) {
+    musicStarted = true;
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch((err) => {
+      // ignored; later explicit user gestures will start happyMusic
+      console.warn("bgMusic play blocked:", err);
+    });
+    document.removeEventListener("click", startBgOnFirstGesture);
+  }
+});
+
+/* "No" button playful behavior */
+const funnyMessages = [
+  "Are you sure? 😏",
+  "Think again 😜",
+  "Unisha please 🥺",
+  "Don't break my heart 💔",
+  "You know I love you ❤️"
+];
+
+noBtn.addEventListener("click", () => {
+  if (noClicks < funnyMessages.length) {
+    message.textContent = funnyMessages[noClicks];
+    noBtn.style.position = "absolute";
+    const btnW = Math.min(120, window.innerWidth * 0.25);
+    const btnH = 40;
+    noBtn.style.left = Math.random() * (window.innerWidth - btnW) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - btnH) + "px";
+    noClicks++;
+  } else {
+    noBtn.disabled = true;
+    message.textContent = "Now only YES is left ❤️";
+  }
+});
+
+/* YES flow: show card, reveal "Press here to open" and show the card's fullscreen button */
+yesBtn.addEventListener("click", () => {
+  if (yesClicked) return;
+  yesClicked = true;
+
+  document.getElementById("buttons").style.display = "none";
+  document.body.style.background = "black";
+  valentineCard.style.top = "60px";
+
+  try { bgMusic.pause(); } catch(e){}
+
+  // make the card-local full button visible
+  fullBtn.style.display = "inline-block";
+
+  // prepare the inline final area with an "Open" button (as before)
+  final.innerHTML = `
+    <img src="https://media.tenor.com/0AVbKGY_MxMAAAAC/happy-love.gif" alt="happy">
+    <h2 style="color:white; margin-top:6px;">I Love You Unisha ❤️</h2>
+    <div style="margin-top:12px;">
+      <button id="openBtn">Press here to open 💌</button>
+    </div>
+    <div id="hiddenLetter" style="display:none; margin-top:20px;">
+      <div class="love-letter">
+        प्रिय Unisha ❤️ <br><br>
+        तिमी मेरो जीवनको सबैभन्दा सुन्दर उपहार हौ।  
+        तिम्रो मुस्कानले मेरो हरेक दिन उज्यालो बनाउँछ।  
+        म सधैं तिम्रो साथमा रहन चाहन्छु,  
+        सुख-दुःख हरेक क्षणमा।  
+        तिमी बिना मेरो संसार अधुरो छ।  
+        म तिमीलाई धेरै माया गर्छु। ❤️ <br><br>
+        सधैं तिम्रो, <br>
+        Vivek 💖
+      </div>
+    </div>
+  `;
+
+  const openBtn = document.getElementById("openBtn");
+  openBtn.addEventListener("click", () => {
+    const hidden = document.getElementById("hiddenLetter");
+    hidden.style.display = "block";
+
+    // user gesture -> play happy music
+    try {
+      happyMusic.currentTime = 0;
+      happyMusic.play().catch((err) => {
+        console.warn("happyMusic blocked:", err);
+      });
+    } catch (e) {
+      console.warn("happyMusic play exception:", e);
+    }
+
+    startHeartsAndRoses();
+    startFireworks();
+
+    openBtn.disabled = true;
+  });
+});
+
+/* Fullscreen button on the valentine card - shows the fullscreen overlay with the Nepali letter */
+fullBtn.addEventListener("click", () => {
+  // show fullscreen overlay
+  fullscreenOverlay.style.display = "block";
+  fullscreenOverlay.setAttribute('aria-hidden', 'false');
+
+  // ensure the overlay scroll is at top
+  try { fullscreenOverlay.scrollTop = 0; } catch(e){}
+
+  // user gesture: play happy music (if not playing) and start effects
+  try {
+    happyMusic.currentTime = 0;
+    happyMusic.play().catch((err) => {
+      console.warn("happyMusic blocked on fullscreen open:", err);
+    });
+  } catch (e) {
+    console.warn("happyMusic exception:", e);
+  }
+
+  startHeartsAndRoses();
+  startFireworks();
+});
+
+/* Close fullscreen overlay */
+closeFullBtn.addEventListener("click", () => {
+  fullscreenOverlay.style.display = "none";
+  fullscreenOverlay.setAttribute('aria-hidden', 'true');
+
+  // optional: pause happy music when closing
+  try { happyMusic.pause(); } catch(e){}
+});
+
+/* floating hearts/roses */
+let heartsInterval;
+function startHeartsAndRoses() {
+  if (heartsInterval) return;
+  heartsInterval = setInterval(() => {
+    const el = document.createElement("div");
+    el.className = Math.random() > 0.5 ? "heart" : "rose";
+    el.textContent = el.className === "heart" ? "❤️" : "🌹";
+    el.style.left = Math.random() * (window.innerWidth - 40) + "px";
+    el.style.top = (window.innerHeight - 40) + "px";
+    el.style.color = el.className === "heart" ? "red" : "pink";
+    document.body.appendChild(el);
+    setTimeout(()=> {
+      try { el.remove(); } catch(e) {}
+    }, 5200);
+  }, 400);
+}
+
+/* FIREWORKS */
+let particles = [];
+let fireworksInterval;
+function startFireworks() {
+  if (fireworksInterval) return;
+  fireworksInterval = setInterval(() => {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * (canvas.height / 2);
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x, y,
+        angle: Math.random() * 2 * Math.PI,
+        speed: Math.random() * 5 + 2,
+        radius: 2 + Math.random()*2,
+        color: `hsl(${Math.random()*360},100%,50%)`,
+        life: 60 + Math.floor(Math.random()*40)
+      });
+    }
+  }, 700);
+
+  if (!animate.running) {
+    animate.running = true;
+    requestAnimationFrame(animate);
+  }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += Math.cos(p.angle) * p.speed;
+    p.y += Math.sin(p.angle) * p.speed;
+    p.life--;
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+
+    if (p.life <= 0 || p.x < -50 || p.x > canvas.width + 50 || p.y > canvas.height + 50) {
+      particles.splice(i,1);
+    }
+  }
+}
+animate.running = false;
+
+</script>
+
+</body>
+  </html>
